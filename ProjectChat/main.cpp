@@ -17,11 +17,11 @@ int main()
 		switch(menu)
 		{
 			case '1':
-				Chat1.newUser();
+				Chat1.signUp();
 				break;
 			case '2':
 				Chat1.showUsers();
-				Chat1.login();
+				Chat1.signIn();
 				break;
 			case '0':
 				break;

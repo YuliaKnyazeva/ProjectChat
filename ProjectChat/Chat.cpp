@@ -2,7 +2,7 @@
 #include "LoginError.h"
 #include <iostream>
 
-void Chat::newUser() // Регистрация пользователя
+void Chat::signUp() // Регистрация пользователя
 {
 	std::string name, login, password;
 	std::cout << "Введите Ваше имя" << std::endl;
@@ -14,14 +14,12 @@ void Chat::newUser() // Регистрация пользователя
 		checkLogin(login);
 		std::cout << "Введите пароль" << std::endl;
 		std::cin >> password;
-		User user(name, login, password);
-		users.push_back(user);
+		users.emplace_back(name, login, password);
 	}
 	catch (LoginError& e)
 	{
 		std:: cout << e.what() << std::endl;
 	}
-
 }
 
 void Chat::checkLogin(const std::string& login) // Проверка при регистрации
@@ -48,7 +46,7 @@ void Chat::addMessage(const std::string& login) // Отправка сообщения
 	messages.push_back(message);
 }
 
-void Chat::showMessage(const std::string login) // Показать входящие сообщения
+void Chat::showMessage(const std::string& login) // Показать входящие сообщения
 {
 	for (auto& message : messages)
 	{
@@ -75,17 +73,17 @@ void Chat::showUsers() // Показать зарегистрированных пользователей
 
 bool Chat::checkUser(const std::string& login, const std::string& password) // Проверка авторизации
 {
-	for (auto i = 0; i < users.size(); i++)
+	for (auto& user: users)
 	{
-		if (login == users[i].getLogin() && password == users[i].getPassword())
+		if (login == user.getLogin() && password == user.getPassword())
 		{
-			std::cout <<"Вы вошли под именем: " << users[i].getName() << std::endl;
+			std::cout <<"Вы вошли под именем: " << user.getName() << std::endl;
 			return true;
 		}
 	}
 	return false;
 }
-void Chat::login() // Вход пользователя
+void Chat::signIn() // Вход пользователя
 {
 	bool check = false;
 	std::string login, password;
