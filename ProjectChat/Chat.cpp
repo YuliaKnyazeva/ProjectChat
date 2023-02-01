@@ -101,4 +101,3 @@ void Chat::signIn() // ¬ход пользовател€
 		addMessage(login);
 	}
 }
-

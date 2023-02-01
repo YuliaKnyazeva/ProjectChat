@@ -6,27 +6,27 @@
 
 int main()
 {
-	Chat Chat1;
 	setlocale(0, "");
-	char menu='0';
-	std::cout << "Добро пожаловать в чат!" << std::endl;
-	do
-	{
-		std::cout <<"Введите 1 - для регистрации, 2 - для входа, 0 - для выхода из программы" << std::endl;
+	Chat chat;
+	char menu = '0';
+	do {
+		std::cout << "Введите 1 - для регистрации, 2 - для входа, 0 - для выхода из программы" << std::endl;
 		std::cin >> menu;
-		switch(menu)
+		switch (menu)
 		{
-			case '1':
-				Chat1.signUp();
-				break;
-			case '2':
-				Chat1.showUsers();
-				Chat1.signIn();
-				break;
-			case '0':
-				break;
+		case '1':
+			chat.signUp();
+			break;
+		case '2':
+			chat.showUsers();
+			chat.signIn();
+			break;
+		case '0':
+			exit(0);
+		default:
+			std::cout << "Ошибка, введите корректный символ из меню" << std::endl;
+			break;
 		}
-	} 
-	while (menu != '0');
+	} while (menu != 0);
 	return 0;
 }
