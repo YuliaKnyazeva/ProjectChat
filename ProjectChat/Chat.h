@@ -3,13 +3,15 @@
 #include "Message.h"
 #include <vector>
 #include <string>
+#include <memory>
 
 
 class Chat
 {
-	std:: vector<User> users;
-	std:: vector<Message> messages;
-public:
+	bool _chatWork = false;
+	std:: vector<User> _users;
+	std:: vector<Message> _messages;
+	std:: shared_ptr < User > _currentUser = nullptr;
 	void signUp();
 	void signIn();
 	bool checkUser(const std::string& login, const std::string& password);
@@ -17,5 +19,11 @@ public:
 	void showMessage(const std::string& login);
 	void showUsers();
 	void checkLogin(const std::string& Login);
+public:
+	void startWork();
+	const bool getChatWork();
+	const std::shared_ptr<User> getCurrentUser();
+	void showStartMenu();
+	void showUserMenu();
 };
 

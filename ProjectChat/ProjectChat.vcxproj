@@ -134,7 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chat.cpp" />
-    <ClCompile Include="LoginError.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="User.cpp" />

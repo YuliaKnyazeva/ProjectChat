@@ -1,6 +1,5 @@
 #pragma once
 #include <exception>
-#include <iostream>
 
 class LoginError :
     public std::exception
