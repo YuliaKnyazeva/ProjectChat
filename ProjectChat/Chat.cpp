@@ -81,7 +81,7 @@ void Chat::showUsers() // Показать зарегистрированных пользователей
 	std::cout << "Пользователи в системе:" << std::endl;
 	for (size_t i = 0; i < _users.size(); i++)
 	{
-		std::cout << _users[i].getName() << '\n';
+		std::cout << _users[i].getName() << _users[i].getLogin() << _users[i].getPassword() << '\n';
 	}
 }
 
@@ -133,7 +133,6 @@ void Chat::showStartMenu() //Стартовое меню
 		case '0':
 			_chatWork = false;
 			break;
-			//exit(0);
 		default:
 			std::cout << "Ошибка, введите корректный символ из меню" << std::endl;
 			break;
@@ -147,7 +146,7 @@ void Chat::showUserMenu() //Меню залогиненного пользователя
 	while (_currentUser) {
 		showUsers();
 		showMessage(_currentUser->getLogin());
-		std::cout << "Введите 1 - для отправки сообщение, 2 - для выхода из аккаунта, 0 - для выхода из программы" << std::endl;
+		std::cout << "Введите 1 - для отправки сообщения, 2 - для выхода из аккаунта, 0 - для выхода из программы" << std::endl;
 		std::cin >> menu;
 		switch (menu) {
 		case '1':
@@ -157,12 +156,73 @@ void Chat::showUserMenu() //Меню залогиненного пользователя
 			_currentUser = nullptr;
 			break;
 		case '0':
+			_currentUser = nullptr;
 			_chatWork = false;
 			break;
-			//exit(0);
 		default:
 			std::cout << "Ошибка, введите корректный символ из меню" << std::endl;
 			break;
 		}
 	}
+}
+
+void Chat::saveUsers() // Сохранение пользователей в файл
+{
+	std::ofstream outfile("savedUsers.txt");
+	if (outfile) {
+		for (User user:_users) {
+			outfile << user;
+		}
+	}
+	else {
+		std::cout << "Невозможно открыть файл!" << '\n';
+	}
+	outfile.close();
+}
+
+void Chat::saveMessages() // Сохранение сообщений в файл
+{
+	std::ofstream outfile("savedMessages.txt");
+	if (outfile) {
+		for (Message message:_messages) {
+			outfile << message;
+		}
+	}
+	else {
+		std::cout << "Невозможно открыть файл!" << '\n';
+	}
+	outfile.close();
+}
+
+void Chat::loadUsers()
+{
+	std::ifstream inputfile("savedUsers.txt");
+	if (inputfile) {
+		User temp;
+		while (!inputfile.eof()) {
+			inputfile >> temp;
+			_users.push_back(temp);
+		}
+	}
+	else {
+		std::cout << "Невозможно открыть файл!" << '\n';
+	}
+	inputfile.close();
+}
+
+void Chat::loadMessages()
+{
+	std::ifstream inputfile("savedMessages.txt");
+	if (inputfile) {
+		Message temp;
+		std::string buf;
+		while (!inputfile.eof()) {
+			inputfile >> temp;
+			_messages.push_back(temp);
+		}
+	}
+	else {
+		std::cout << "Невозможно открыть файл!" << '\n';
+	}
+	inputfile.close();
 }

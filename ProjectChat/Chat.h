@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <fstream>
 
 
 class Chat
@@ -17,7 +18,7 @@ class Chat
 	bool checkUser(const std::string& login, const std::string& password);
 	void addMessage(const std::string& login);
 	void showMessage(const std::string& login);
-	void showUsers();
+	
 	void checkLogin(const std::string& Login);
 public:
 	void startWork();
@@ -25,5 +26,10 @@ public:
 	const std::shared_ptr<User> getCurrentUser();
 	void showStartMenu();
 	void showUserMenu();
+	void saveUsers();
+	void saveMessages();
+	void loadUsers();
+	void loadMessages();
+	void showUsers();
 };
 

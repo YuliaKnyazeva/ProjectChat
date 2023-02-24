@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <fstream>
 
 class User
 {
@@ -14,5 +15,7 @@ public:
 	const std::string &getName();
 	const std::string &getLogin();
 	const std::string &getPassword();
+	friend std::ifstream& operator >>(std::ifstream& is, User& obj);
+	friend std::ostream& operator <<(std::ostream& os, const User& obj);
 };
 
