@@ -8,10 +8,9 @@ int main()
 {
 	setlocale(0, "");
 	Chat chat;
+	chat.startWork();
 	chat.loadUsers();
 	chat.loadMessages();
-	chat.startWork();
-	//chat.showUsers();
 	while (chat.getChatWork()) {
 		chat.showStartMenu();
 		while (chat.getCurrentUser()!=nullptr) {

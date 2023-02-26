@@ -68,11 +68,7 @@ void Chat::showMessage(const std::string& login) // Показать входящие сообщения
 		{
 			std::cout << "Пользователь " << message.getFrom() << " написал:" << std::endl
 				<< message.getText() << std::endl;
-		}
-		else 
-		{
-			std::cout << "Для вас нет личных сообщений" << std::endl;
-		}
+		} 
 	}
 }
 
@@ -81,7 +77,7 @@ void Chat::showUsers() // Показать зарегистрированных пользователей
 	std::cout << "Пользователи в системе:" << std::endl;
 	for (size_t i = 0; i < _users.size(); i++)
 	{
-		std::cout << _users[i].getName() << _users[i].getLogin() << _users[i].getPassword() << '\n';
+		std::cout << _users[i].getName() << '\n';
 	}
 }
 
@@ -144,15 +140,20 @@ void Chat::showUserMenu() //Меню залогиненного пользователя
 {
 	char menu = '0';
 	while (_currentUser) {
-		showUsers();
-		showMessage(_currentUser->getLogin());
-		std::cout << "Введите 1 - для отправки сообщения, 2 - для выхода из аккаунта, 0 - для выхода из программы" << std::endl;
+		std::cout << "Введите 1 - Входящие, 2 - Отправить сообщение, 3 - Список пользователей, 4 - Выход из аккаунта, 0 - Выход из программы" 
+			<< std::endl;
 		std::cin >> menu;
 		switch (menu) {
 		case '1':
-			addMessage(_currentUser->getLogin());
+			showMessage(_currentUser->getLogin());
 			break;
 		case '2':
+			addMessage(_currentUser->getLogin());
+			break;
+		case '3':
+			showUsers();
+			break;
+		case '4':
 			_currentUser = nullptr;
 			break;
 		case '0':
@@ -201,7 +202,7 @@ void Chat::loadUsers()
 		User temp;
 		while (!inputfile.eof()) {
 			inputfile >> temp;
-			_users.push_back(temp);
+		_users.push_back(temp);
 		}
 	}
 	else {
@@ -215,7 +216,6 @@ void Chat::loadMessages()
 	std::ifstream inputfile("savedMessages.txt");
 	if (inputfile) {
 		Message temp;
-		std::string buf;
 		while (!inputfile.eof()) {
 			inputfile >> temp;
 			_messages.push_back(temp);

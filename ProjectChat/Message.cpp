@@ -28,11 +28,11 @@ std::ifstream& operator >>(std::ifstream& is, Message& obj)
 
 std::ostream& operator <<(std::ostream& os, const Message& obj)
 {
+	os << '\n';
 	os << obj._text;
 	os << '|';
 	os << obj._from;
 	os << ' ';
 	os << obj._to;
-	os << '\n';
 	return os;
 }

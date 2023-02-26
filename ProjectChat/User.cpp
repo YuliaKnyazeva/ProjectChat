@@ -28,11 +28,11 @@ std::ifstream& operator >>(std::ifstream& is, User& obj)
 
 std::ostream& operator <<(std::ostream& os, const User& obj)
 {
+	os << '\n';
 	os << obj._name;
 	os << ' ';
 	os << obj._login;
 	os << ' ';
 	os << obj._password;
-	os << '\n';
 	return os;
 }

@@ -18,7 +18,7 @@ class Chat
 	bool checkUser(const std::string& login, const std::string& password);
 	void addMessage(const std::string& login);
 	void showMessage(const std::string& login);
-	
+	void showUsers();
 	void checkLogin(const std::string& Login);
 public:
 	void startWork();
@@ -30,6 +30,6 @@ public:
 	void saveMessages();
 	void loadUsers();
 	void loadMessages();
-	void showUsers();
+
 };
 
