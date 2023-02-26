@@ -18,12 +18,12 @@ class Chat
 	bool checkUser(const std::string& login, const std::string& password);
 	void addMessage(const std::string& login);
 	void showMessage(const std::string& login);
-	void showUsers();
+	void showUsers() const;
 	void checkLogin(const std::string& Login);
 public:
 	void startWork();
-	const bool getChatWork();
-	const std::shared_ptr<User> getCurrentUser();
+	const bool getChatWork() const;
+	const std::shared_ptr<User> getCurrentUser() const;
 	void showStartMenu();
 	void showUserMenu();
 	void saveUsers();

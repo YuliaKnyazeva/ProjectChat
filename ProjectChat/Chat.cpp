@@ -7,12 +7,12 @@ void Chat:: startWork()
 	_chatWork=true;
 }
 
-const bool Chat::getChatWork()
+const bool Chat::getChatWork() const
 {
 	return _chatWork;
 }
 
-const std::shared_ptr<User> Chat::getCurrentUser()
+const std::shared_ptr<User> Chat::getCurrentUser() const
 {
 	return _currentUser;
 }
@@ -72,7 +72,7 @@ void Chat::showMessage(const std::string& login) // Показать входящие сообщения
 	}
 }
 
-void Chat::showUsers() // Показать зарегистрированных пользователей
+void Chat::showUsers() const // Показать зарегистрированных пользователей
 {
 	std::cout << "Users in system:" << std::endl;
 	for (size_t i = 0; i < _users.size(); i++)
