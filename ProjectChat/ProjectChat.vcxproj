@@ -104,10 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Server 8.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Server 8.0\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,12 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Chat.h" />
+    <ClInclude Include="Database.h" />
     <ClInclude Include="LoginError.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chat.cpp" />
+    <ClCompile Include="Database.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="User.cpp" />

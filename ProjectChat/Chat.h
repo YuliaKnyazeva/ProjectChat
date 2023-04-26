@@ -1,6 +1,7 @@
 #pragma once
 #include "User.h"
 #include "Message.h"
+#include "Database.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -13,6 +14,7 @@ class Chat
 	std:: vector<User> _users;
 	std:: vector<Message> _messages;
 	std:: shared_ptr < User > _currentUser = nullptr;
+	Database db;
 	void signUp();
 	void signIn();
 	bool checkUser(const std::string& login, const std::string& password);
@@ -26,10 +28,5 @@ public:
 	const std::shared_ptr<User> getCurrentUser() const;
 	void showStartMenu();
 	void showUserMenu();
-	void saveUsers();
-	void saveMessages();
-	void loadUsers();
-	void loadMessages();
-
 };
 
