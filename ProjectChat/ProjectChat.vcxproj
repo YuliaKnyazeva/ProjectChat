@@ -131,14 +131,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Chat.h" />
-    <ClInclude Include="Database.h" />
-    <ClInclude Include="LoginError.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chat.cpp" />
-    <ClCompile Include="Database.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="User.cpp" />

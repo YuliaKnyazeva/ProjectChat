@@ -1,8 +1,9 @@
 #include "User.h"
 #include "Chat.h"
-#include "Database.h"
 #include <iostream>
 #include <mysql.h>
+
+
 
 
 

@@ -1,12 +1,41 @@
 #include "Chat.h"
-#include "LoginError.h"
 #include <iostream>
 
+
+void Chat::Connect()
+{
+	int iResult;
+	iResult = WSAStartup(MAKEWORD(2, 2), &_wsaData);
+	if (iResult != 0) {
+		printf("WSAStartup failed with error: %d\n", iResult);
+		exit(1);
+	}
+
+	int sizeofaddr = sizeof(_addr);
+	_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	_addr.sin_port = htons(PORT);
+	_addr.sin_family = AF_INET;
+
+	SOCKET CurrentConnection = socket(AF_INET, SOCK_STREAM, 0);
+	if (connect(CurrentConnection, (SOCKADDR*)&_addr, sizeof(_addr)) != 0) {
+		std::cout << "Connect failed" << std::endl;
+		WSACleanup();
+		exit(1);
+	}
+	_Connection=CurrentConnection;
+	std::cout << "Connected" << std::endl;
+}
+
+void Chat::Disconnect()
+{
+	send(_Connection, "0", sizeof("0"), 0);
+	closesocket(_Connection);
+	WSACleanup();
+}
 void Chat:: startWork()
 {
+	Connect();
 	_chatWork=true;
-	db.Connect();
-	//db.CreateTables();
 }
 
 const bool Chat::getChatWork() const
@@ -21,66 +50,56 @@ const std::shared_ptr<User> Chat::getCurrentUser() const
 
 void Chat::signUp() // Регистрация пользователя
 {
+	char buf[1024];
+	send(_Connection, "1", sizeof("1"), 0);
 	std::string name, login, password;
 	std::cout << "Enter login" << std::endl;
 	std::cin >> login;
-	try
-	{
-		checkLogin(login);
+	send(_Connection, login.c_str(), sizeof(login), 0);
+	recv(_Connection, buf, sizeof(buf), 0);
+	int temp = std::atoi(buf);
+	if (temp==1) {
 		std::cout << "Enter password" << std::endl;
 		std::cin >> password;
+		send(_Connection, password.c_str(), sizeof(password), 0);
 		std::cout << "Enter your Name" << std::endl;
 		std::cin >> name;
-		db.addUser(login, password, name);
+		send(_Connection, name.c_str(), sizeof(name), 0);
+		_users.emplace_back(name, login, password);
 	}
-	catch (LoginError& e)
-	{
-		std:: cout << e.what() << std::endl;
-	}
+	else std::cout << "Login used" << std::endl;
 }
 
-void Chat::checkLogin(const std::string& login) // Проверка при регистрации
+void Chat::ShowMessages(const std::string& login)
 {
-	for (size_t i = 0; i < _users.size(); i++)
-	{
-		if (login == _users[i].getLogin())
-		{
-			throw LoginError();
-		}
-	}
+	char buf[1024];
+	send(_Connection, "21", sizeof("21"), 0);
+	send(_Connection, login.c_str(), sizeof(login), 0);
+	recv(_Connection, buf, sizeof(buf), 0);
+	std::cout << buf << std::endl;
 }
 
-void Chat::addMessage(const std::string& login) // Отправка сообщения
+void Chat::sendMessage(const std::string& login) // Отправка сообщения
 {
+	send(_Connection, "22", sizeof("22"), 0);
 	std::string from, to, text;
+	send(_Connection, login.c_str(), sizeof(login), 0);
 	from = login;
 	std::cout << "Enter user name or 'all' for send all users" << std::endl;
 	std::cin >> to;
+	send(_Connection, to.c_str(), sizeof(to), 0);
 	std::cout << "Enter message" << std::endl;
 	std::cin.ignore();
 	getline(std::cin, text);
-	_messages.emplace_back(from, to, text);
+	send(_Connection, text.c_str(), sizeof(text), 0);
 }
 
-void Chat::showMessage(const std::string& login) // Показать входящие сообщения
+void Chat::ShowUsers()
 {
-	for (auto& message : _messages)
-	{
-		if (login == message.getTo() || message.getTo() == "all")
-		{
-			std::cout << "User " << message.getFrom() << " written:" << std::endl
-				<< message.getText() << std::endl;
-		} 
-	}
-}
-
-void Chat::showUsers() const // Показать зарегистрированных пользователей
-{
-	std::cout << "Users in system:" << std::endl;
-	for (size_t i = 0; i < _users.size(); i++)
-	{
-		std::cout << _users[i].getName() << '\n';
-	}
+	char buf[1024];
+	send(_Connection, "23", sizeof("23"), 0);
+	recv(_Connection, buf, sizeof(buf), 0);
+	std::cout << "Users in chat:" << std::endl << buf << std::endl;
 }
 
 bool Chat::checkUser(const std::string& login, const std::string& password) // Проверка авторизации
@@ -89,7 +108,6 @@ bool Chat::checkUser(const std::string& login, const std::string& password) // П
 	{
 		if (login == user.getLogin() && password == user.getPassword())
 		{
-			std::cout <<"Welcome: " << user.getName() << std::endl;
 			_currentUser = std::make_shared<User>(user);
 			return true;
 		}
@@ -98,23 +116,31 @@ bool Chat::checkUser(const std::string& login, const std::string& password) // П
 }
 void Chat::signIn() // Вход пользователя
 {
-	bool check = false;
-	std::string login, password;
+	char buf[1024];
+	send(_Connection, "2", sizeof("2"), 0);
+	std::string login, password, name;
 	std::cout << "Enter your login" << std::endl;
 	std::cin >> login;
+	send(_Connection, login.c_str(), sizeof(login), 0);
 	std::cout << "Enter password" << std::endl;
 	std::cin >> password;
-	if (!checkUser(login, password))
-	{
-		std::cout << "Login or passwor error" << std::endl;
-	}
-	else
-	{
+	send(_Connection, password.c_str(), sizeof(password), 0);
+	recv(_Connection, buf, sizeof(buf), 0);
+	int temp = std::atoi(buf);
+	if (temp==1) {
+		recv(_Connection, buf, sizeof(buf), 0);
+		name = buf;
+		std::cout<< "Welcome, " << name <<"!"<<std::endl;
+		_users.emplace_back(name, login, password);
+		checkUser(login, password);
 		showUserMenu();
+	}
+	else {
+		std::cout << "Login or password error" << std::endl;
 	}
 }
 
-void Chat::showStartMenu() //Стартовое меню
+void Chat::showStartMenu() //Стартовое меню // Перестало закрываться на 0, если не с первого раза (Разобраться)
 {
 	char menu = '0';
 	do {
@@ -129,8 +155,8 @@ void Chat::showStartMenu() //Стартовое меню
 			signIn();
 			break;
 		case '0':
+			Disconnect();
 			_chatWork = false;
-			db.Disconnect();
 			break;
 		default:
 			std::cout << "Error, enter the correct number of menu" << std::endl;
@@ -139,30 +165,29 @@ void Chat::showStartMenu() //Стартовое меню
 	} while (!_currentUser && _chatWork);
 }
 
-void Chat::showUserMenu() //Меню залогиненного пользователя
+void Chat::showUserMenu() //Меню залогиненного пользователя // 4 выходит из программы, а 0 - нет (Разобраться)
 {
 	char menu = '0';
 	while (_currentUser) {
-		std::cout << "Enter 1 - incoming message, 2 - Send message, 3 - Users, 4 - Log out, 0 - Exit programm" 
-			<< std::endl;
+		std::cout << "Enter 1 - incoming message, 2 - Send message, 3 - Users, 4 - Log out, 0 - Exit programm" << std::endl;
 		std::cin >> menu;
 		switch (menu) {
 		case '1':
-			showMessage(_currentUser->getLogin());
+			ShowMessages(_currentUser->getLogin());
 			break;
 		case '2':
-			addMessage(_currentUser->getLogin());
+			sendMessage(_currentUser->getLogin());
 			break;
 		case '3':
-			showUsers();
+			ShowUsers();
 			break;
 		case '4':
 			_currentUser = nullptr;
 			break;
 		case '0':
-			_currentUser = nullptr;
+			Disconnect();
 			_chatWork = false;
-			db.Disconnect();
+			exit(1);
 			break;
 		default:
 			std::cout << "Error, enter the correct number of menu" << std::endl;

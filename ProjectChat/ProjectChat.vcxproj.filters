@@ -24,12 +24,6 @@
     <ClInclude Include="Message.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="LoginError.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Database.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="User.cpp">
@@ -42,9 +36,6 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Message.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Database.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
